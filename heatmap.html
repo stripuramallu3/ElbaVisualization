@@ -124,8 +124,8 @@
             legendFactor = 50, 
 			colors = ["#ffffff","#dde8f1","#bbd1e3","#9abad6","#78a4c8","#568dba","#3f76a3","#325e82","#264662"]
 			workloads = [], 
-            workload_min = 10000,
-            workload_max = 20000,
+            workload_min = Number.MAX_VALUE,
+            workload_max = Number.MIN_VALUE,
             time_min = 0, 
             time_max = 391950, 
             timestampInterval = 150,
@@ -145,13 +145,16 @@
 
 		var heatmapChart = function(tsvFile) {
             times = setTimes(time_min, time_max, timestampInterval)
-            workloads = setWorkload(workload_min, workload_max)
-            console.log(times)
 			d3.tsv(tsvFile, 
 				function(d, i) {
                     w = +d.workload
                     t = +d.timestamp
                     v = +d.pit
+                    if (w < workload_min) {
+                        workload_min = w; 
+                    } else if (w > workload_max) {
+                        workload_max = w; 
+                    }
                     for (var i = 0; i < times.length; i++) {
                         if (times[i] == t) {
                             return {
@@ -163,16 +166,17 @@
                     }
 				},
 			function (error, data) {
+                workloads = setWorkload(workload_min, workload_max)
+                workload_int = workload_max/1000; 
                 var workloadLabels = svg.selectAll(".colLabelg")
                     .data(workloads)
                     .enter().append("text")
                     .text(function(d) {return d;})
                     .attr("x", 0)
                     .attr("y", function(d, i) {return i * gridSize;})
-                    .attr("dy", "0.72em")
+                    .attr("dy", "0.75em")
                     .style("text-anchor", "end")
                     .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
-                    //.attr("class", "axis-workweek")
                     .attr("class",  function (d,i) { return "colLabel mono c"+i;} )
                     .on("mouseover", function(d) {d3.select(this).classed("text-hover",true);})
                     .on("mouseout" , function(d) {d3.select(this).classed("text-hover",false);});
@@ -184,7 +188,7 @@
                     .attr("x",  -1 * gridSize * (workloads.length + 2))
                     .attr("y", function(d, i) {return i * gridSize})
                     .style("text-anchor", "middle")
-                    .attr("dy", "0.72em")
+                    .attr("dy", "0.75em")
                     .attr("transform", "translate(" + gridSize / 2 + ", -6)")
                     .attr("transform", "rotate(-90)")
                     //.attr("class", "timeLabel mono axis axis-worktime")
@@ -199,20 +203,20 @@
 				var cards = svg.append("g").attr("id", "cards").attr("class", "g3").selectAll(".cellg")
 					.data(data, function(d) {return d.workload+ ":"+d.timestamp})
 				.enter().append("rect")
-                    .attr("x", function(d, i) {return ((d.timestamp/timestampInterval) * gridSize) - time_min / (time_max - time_min) - shift})
-                    .attr("y", function(d, i) {return (d.workload/1000 - 20) * -1 * gridSize - (d.workload/1000 - 20)}) 
+                    .attr("x", function(d, i) {return (Math.round((d.timestamp/timestampInterval) * gridSize) - time_min / (time_max - time_min))})
+                    .attr("y", function(d, i) {return (d.workload/1000 - workload_int) * -1 * gridSize - (d.workload/1000 - workload_int)}) 
                     .attr("workload", function(d, i) {return d.workload})
                     .attr("timestamp", function(d, i) {return d.timestamp})
 					.attr("rx", 4)
 					.attr("yx", 4)
-                    .attr("class", function(d){return "cell cell-border cr"+(d.timestamp/timestampInterval)+" cc"+(-1 * d.workload/1000 - 20);})
+                    .attr("class", function(d){return "cell cell-border cr"+(d.timestamp/timestampInterval)+" cc"+(-1 * d.workload/1000 - workload_int);})
 					.attr("width", gridSize)
 					.attr("height", gridSize)
 					.style("fill", "#ffffd9")
                     .on("mouseover", function(d){
                         d3.select(this).classed("cell-hover",true);
                         d3.selectAll(".rowLabel").classed("text-highlight",function(r,ri){ return ri==(d.timestamp/timestampInterval);});
-                        d3.selectAll(".colLabel").classed("text-highlight",function(c,ci){ return ci==(d.workload/1000 - 20) * -1;});
+                        d3.selectAll(".colLabel").classed("text-highlight",function(c,ci){ return ci==(d.workload/1000 - workload_int) * -1;});
                         d3.select("#tooltip")
                          .style("left", (d3.event.pageX+10) + "px")
                          .style("top", (d3.event.pageY-10) + "px")
@@ -263,7 +267,7 @@
                       .attr("x", gridSize * times.length)
                       .attr("y", gridSize * (workloads.length + 5))
                       .attr("text-anchor", "end")
-                      .text("Time");
+                      .text("Time (" + timestampInterval +" ms)");
 
 	            legend.enter().append("g")
 	              .attr("class", "legend");
@@ -273,7 +277,8 @@
 	            .attr("y", gridSize * (workloads.length + 4) + legendFactor)
 	            .attr("width", legendElementWidth)
 	            .attr("height", gridSize / 2)
-	            .style("fill", function(d, i) { return colors[i]; });
+                .attr("class", "legend-rect")
+	            .style("fill", function(d, i) { return colors[i]; })
 
 	           legend.append("text")
 	            .attr("class", "mono")
@@ -361,7 +366,7 @@
                   .on("mouseup", function() {
                         // remove selection frame
                      timestampList = []
-                     selectedWorkload = 20000
+                     selectedWorkload = Number.MAX_VALUE
                      var selectedRectangles = document.getElementsByClassName("cell-selected")
                      for (var i = 0; i < selectedRectangles.length; i++) {
                         timestampList.push(selectedRectangles[i].__data__.timestamp)
