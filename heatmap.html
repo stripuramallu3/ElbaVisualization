@@ -115,8 +115,8 @@
 		var margin = { top: 100, right: 0, bottom: 100, left: 70 },
 			width = 1000 - margin.left - margin.right, 
 			height = 700 - margin.top - margin.bottom, 
-			gridSize = Math.floor(width/24), 
-			legendElementWidth = gridSize * 2, 
+			gridSize = Math.floor(width/50), 
+			legendElementWidth = Math.floor(width/15), 
             legendFactor = 50, 
 			colors = ["#ffffff","#dde8f1","#bbd1e3","#9abad6","#78a4c8","#568dba","#3f76a3","#325e82","#264662"]
 			workloads = [], 
@@ -142,6 +142,7 @@
 		var heatmapChart = function(tsvFile) {
             times = setTimes(time_min, time_max, timestampInterval)
             workloads = setWorkload(workload_min, workload_max)
+            console.log(times)
 			d3.tsv(tsvFile, 
 				function(d, i) {
                     w = +d.workload
@@ -176,10 +177,10 @@
                     .data(times)
                     .enter().append("text")
                     .text(function(d) {if (d >= time_min && d <= time_max) {return d;}})
-                    .attr("x", -1 * height + 50)
+                    .attr("x",  -1 * gridSize * (workloads.length + 2))
                     .attr("y", function(d, i) {return i * gridSize})
                     .style("text-anchor", "middle")
-                    .attr("dy", "1.75em")
+                    .attr("dy", "0.72em")
                     .attr("transform", "translate(" + gridSize / 2 + ", -6)")
                     .attr("transform", "rotate(-90)")
                     //.attr("class", "timeLabel mono axis axis-worktime")
@@ -254,8 +255,8 @@
                       //.attr("transform", "translate(0," + height/2 + ")")
                       .append("text")
                       .attr("class", "label")
-                      .attr("x", width/2)
-                      .attr("y", height)
+                      .attr("x", gridSize * times.length)
+                      .attr("y", gridSize * (workloads.length + 5))
                       .attr("text-anchor", "end")
                       .text("Time");
 
@@ -264,7 +265,7 @@
 
 	            legend.append("rect")
 	            .attr("x", function(d, i) { return legendElementWidth * i; })
-	            .attr("y", height + legendFactor)
+	            .attr("y", gridSize * (workloads.length + 4) + legendFactor)
 	            .attr("width", legendElementWidth)
 	            .attr("height", gridSize / 2)
 	            .style("fill", function(d, i) { return colors[i]; });
@@ -273,7 +274,7 @@
 	            .attr("class", "mono")
 	            .text(function(d) { return "≥ " + Math.round(d); })
 	            .attr("x", function(d, i) { return legendElementWidth * i; })
-	            .attr("y", height + gridSize + legendFactor);
+	            .attr("y", gridSize * (workloads.length + 4) + legendFactor)
 
 	           legend.exit().remove();
                 var sa=d3.select(".g3")
