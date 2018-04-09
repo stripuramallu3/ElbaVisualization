@@ -203,7 +203,7 @@
 				var cards = svg.append("g").attr("id", "cards").attr("class", "g3").selectAll(".cellg")
 					.data(data, function(d) {return d.workload+ ":"+d.timestamp})
 				.enter().append("rect")
-                    .attr("x", function(d, i) {return (Math.round((d.timestamp/timestampInterval) * gridSize) - time_min / (time_max - time_min))})
+                    .attr("x", function(d, i) {return ((d.timestamp/timestampInterval) * gridSize) - time_min / (time_max - time_min)})
                     .attr("y", function(d, i) {return (d.workload/1000 - workload_int) * -1 * gridSize - (d.workload/1000 - workload_int)}) 
                     .attr("workload", function(d, i) {return d.workload})
                     .attr("timestamp", function(d, i) {return d.timestamp})
@@ -215,7 +215,7 @@
 					.style("fill", "#ffffd9")
                     .on("mouseover", function(d){
                         d3.select(this).classed("cell-hover",true);
-                        d3.selectAll(".rowLabel").classed("text-highlight",function(r,ri){ return ri==(d.timestamp/timestampInterval);});
+                        d3.selectAll(".rowLabel").classed("text-highlight",function(r,ri){ return ri==(d.timestamp - time_min)/timestampInterval;});
                         d3.selectAll(".colLabel").classed("text-highlight",function(c,ci){ return ci==(d.workload/1000 - workload_int) * -1;});
                         d3.select("#tooltip")
                          .style("left", (d3.event.pageX+10) + "px")
@@ -264,7 +264,7 @@
                       //.attr("transform", "translate(0," + height/2 + ")")
                       .append("text")
                       .attr("class", "label")
-                      .attr("x", gridSize * times.length)
+                      .attr("x", width/2)
                       .attr("y", gridSize * (workloads.length + 5))
                       .attr("text-anchor", "end")
                       .text("Time (" + timestampInterval +" ms)");
@@ -382,10 +382,13 @@
                      }
                      document.getElementById("cards").remove()
                      document.getElementById("x-axis label").remove()
-                     var elements = document.getElementsByClassName("rowLabel")
+                     d3.selectAll(".cards").remove()
+                     d3.selectAll(".colLabel").remove()
+                     d3.selectAll(".rowLabel").remove()
+                     /*var elements = document.getElementsByClassName("rowLabel")
                      while(elements.length > 0){
                         elements[0].parentNode.removeChild(elements[0]);
-                     }
+                     }*/
                      heatmapChart(datasets[0])
                      lineChart(selectedWorkload, timestampList)
 
