@@ -127,8 +127,9 @@
             workload_min = Number.MAX_VALUE,
             workload_max = Number.MIN_VALUE,
             time_min = 0, 
-            time_max = 391950, 
+            time_max = 391950,
             timestampInterval = 150,
+            timestampList = []
             shift = 0
             first = true
 			datasets = ["test.tsv", "test01.tsv"]
@@ -236,7 +237,6 @@
 				cards.transition().duration(1000)
 					.style("fill", function(d) {return colorScale(d.value)})
                 if (!first) {
-                    first = false
                     var rects = document.getElementsByClassName("cell")
                     if (rects[0].x.baseVal.value != 0) {
                         var bringLeft = rects[0].x.baseVal.value
@@ -365,7 +365,6 @@
                   })
                   .on("mouseup", function() {
                         // remove selection frame
-                     timestampList = []
                      selectedWorkload = Number.MAX_VALUE
                      var selectedRectangles = document.getElementsByClassName("cell-selected")
                      for (var i = 0; i < selectedRectangles.length; i++) {
@@ -373,25 +372,27 @@
                         selectedWorkload = Math.min(selectedWorkload, selectedRectangles[i].__data__.workload)
                      }
                      timestampList.sort(function(a, b){return a - b})
-                     time_min = timestampList[0]
-                     time_max = timestampList[timestampList.length - 1]
-                     //timestampInterval = Math.round((time_max - time_min) / (150 * 15))
-                     timestampInterval = Math.round((timestampInterval/factors[factorsCount - 1]) * factors[factorsCount++])
-                     if (timestampInterval == 15) {
-                        timestampInterval = 50;
+                     if (timestampList.length >= 2 && timestampInterval != 50) {
+                         time_min = timestampList[0]
+                         time_max = timestampList[timestampList.length - 1]
+                         //timestampInterval = Math.round((time_max - time_min) / (150 * 15))
+                         timestampInterval = Math.round((timestampInterval/factors[factorsCount - 1]) * factors[factorsCount++])
+                         if (timestampInterval == 15) {
+                            timestampInterval = 50;
+                         }
+                         document.getElementById("cards").remove()
+                         document.getElementById("x-axis label").remove()
+                         d3.selectAll(".cards").remove()
+                         d3.selectAll(".colLabel").remove()
+                         d3.selectAll(".rowLabel").remove()
+                         /*var elements = document.getElementsByClassName("rowLabel")
+                         while(elements.length > 0){
+                            elements[0].parentNode.removeChild(elements[0]);
+                         }*/
+                         heatmapChart(datasets[0])
+                         lineChart(selectedWorkload, timestampList)
+                         timestampList = []
                      }
-                     document.getElementById("cards").remove()
-                     document.getElementById("x-axis label").remove()
-                     d3.selectAll(".cards").remove()
-                     d3.selectAll(".colLabel").remove()
-                     d3.selectAll(".rowLabel").remove()
-                     /*var elements = document.getElementsByClassName("rowLabel")
-                     while(elements.length > 0){
-                        elements[0].parentNode.removeChild(elements[0]);
-                     }*/
-                     heatmapChart(datasets[0])
-                     lineChart(selectedWorkload, timestampList)
-
                      sa.selectAll("rect.selection").remove();
                   
                          // remove temporary selection marker class
