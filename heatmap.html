@@ -123,10 +123,15 @@
             workload_min = 10000,
             workload_max = 20000,
             time_min = 0, 
-            time_max = 150, 
-            timestampInterval = 30,
+            time_max = 391950, 
+            timestampInterval = 150,
             shift = 0
+            first = true
 			datasets = ["test.tsv", "test01.tsv"]
+            factors = [150, 15, 1, 0.1]
+            factorsCount = 0
+            timestampInterval *= factors[factorsCount++]
+            times = setTimes(time_min, time_max, timestampInterval)
 
 		var svg = d3.select("#heat").append("svg")
 					.attr("width", width + margin.left + margin.right)
@@ -135,22 +140,24 @@
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 		var heatmapChart = function(tsvFile) {
+            times = setTimes(time_min, time_max, timestampInterval)
+            workloads = setWorkload(workload_min, workload_max)
 			d3.tsv(tsvFile, 
-				function(d) {
+				function(d, i) {
                     w = +d.workload
                     t = +d.timestamp
                     v = +d.pit
-                    if (t >= time_min && t <= time_max) {
-                        return {
-                            workload: +d.workload, 
-                            timestamp: +d.timestamp, 
-                            value: +d.pit
-                        };
+                    for (var i = 0; i < times.length; i++) {
+                        if (times[i] == t) {
+                            return {
+                                workload: +d.workload, 
+                                timestamp: +d.timestamp, 
+                                value: +d.pit
+                            };
+                        }
                     }
 				},
 			function (error, data) {
-                times = setTimes(time_min, time_max, timestampInterval)
-                workloads = setWorkload(workload_min, workload_max)
                 var workloadLabels = svg.selectAll(".colLabelg")
                     .data(workloads)
                     .enter().append("text")
@@ -219,17 +226,17 @@
 
 				cards.transition().duration(1000)
 					.style("fill", function(d) {return colorScale(d.value)})
-
-                
-                var rects = document.getElementsByClassName("cell")
-                if (rects[0].x.baseVal.value != 0) {
-                    var bringLeft = rects[0].x.baseVal.value
-                    for (var i = 0; i < rects.length; i++) {
-                        rects[i].attributes["0"].value -= bringLeft 
+                if (!first) {
+                    first = false
+                    var rects = document.getElementsByClassName("cell")
+                    if (rects[0].x.baseVal.value != 0) {
+                        var bringLeft = rects[0].x.baseVal.value
+                        for (var i = 0; i < rects.length; i++) {
+                            rects[i].attributes["0"].value -= bringLeft 
+                        }
                     }
                 }
-                
-
+                first = false; 
 				var legend = svg.selectAll(".legend")
                     .data([0].concat(colorScale.quantiles()), function(d) { return d; });
 
@@ -346,8 +353,6 @@
                      }
                   })
                   .on("mouseup", function() {
-                    //console.log(sa.selectAll("rect.selection"))
-                    //console.log(d3.selectAll('.cell-selection'))
                         // remove selection frame
                      timestampList = []
                      selectedWorkload = 20000
@@ -359,7 +364,11 @@
                      timestampList.sort(function(a, b){return a - b})
                      time_min = timestampList[0]
                      time_max = timestampList[timestampList.length - 1]
-                     timestampInterval = Math.round((time_max - time_min) / 10)
+                     //timestampInterval = Math.round((time_max - time_min) / (150 * 15))
+                     timestampInterval = Math.round((timestampInterval/factors[factorsCount - 1]) * factors[factorsCount++])
+                     if (timestampInterval == 15) {
+                        timestampInterval = 50;
+                     }
                      document.getElementById("cards").remove()
                      var elements = document.getElementsByClassName("rowLabel")
                      while(elements.length > 0){
@@ -407,7 +416,7 @@
         var lineChart = function(workload, timestampList) {
             timestamp_min = timestampList[0]
             timestam_max = timestampList[timestampList.length - 1]
-            
+
 
 
             
