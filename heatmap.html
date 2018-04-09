@@ -88,11 +88,15 @@
 	<script src="http://d3js.org/d3.v3.js"></script>
 </head>
 <body>
+    <br>
+    <br>
     <div id="tooltip" class="hidden">
         <p><span id="value"></p>
     </div>
-	<center><div id="heat"></div>
-	<div id="dataset-picker"></div></center>
+    <center>
+        <div id="dataset-picker"></div>
+    	<div id="heat"></div>
+    </center>
     <br>
     <br>
     <div id="line"></div>
@@ -251,6 +255,7 @@
                       .attr("transform", "rotate(-90)")
                       .text("Workload Level");
                 svg.append("g")
+                    .attr("id", "x-axis label")
                       .attr("class", "x axis")
                       //.attr("transform", "translate(0," + height/2 + ")")
                       .append("text")
@@ -371,6 +376,7 @@
                         timestampInterval = 50;
                      }
                      document.getElementById("cards").remove()
+                     document.getElementById("x-axis label").remove()
                      var elements = document.getElementsByClassName("rowLabel")
                      while(elements.length > 0){
                         elements[0].parentNode.removeChild(elements[0]);
