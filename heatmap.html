@@ -179,7 +179,7 @@
                     .enter().append("text")
                     .text(function(d) {return d;})
                     .attr("x", 0)
-                    .attr("y", function(d, i) {return i * gridSize;})
+                    .attr("y", function(d, i) {return (i * gridSize) - (gridSize/2.0);})
                     .attr("dy", "0.75em")
                     .style("text-anchor", "end")
                     .attr("transform", "translate(-6," + gridSize / 1.5 + ")")
