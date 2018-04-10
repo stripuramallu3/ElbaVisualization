@@ -2,8 +2,8 @@ import os
 import datetime
 import re
 
-RWfname = 'RW%s.csv' % datetime.datetime.now().strftime("_%Y-%m-%d_%H:%M:%S")
-ROfname = 'RO%s.csv' % datetime.datetime.now().strftime("_%Y-%m-%d_%H:%M:%S")
+RWfname = 'RW.tsv' % datetime.datetime.now().strftime("_%Y-%m-%d_%H:%M:%S")
+ROfname = 'RO.tsv' % datetime.datetime.now().strftime("_%Y-%m-%d_%H:%M:%S")
 header = "workload, timestamp, pit\n"
 RWout=open(RWfname,"a")
 RWout.write(header)
