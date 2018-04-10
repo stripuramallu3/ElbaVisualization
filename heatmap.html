@@ -95,7 +95,7 @@
     </div>
     <center>
         <div id="dataset-picker"></div>
-    	<h2>Point Time Response Graph</h2><div id="heat"></div>
+    	<h1>Point Time Response Graph</h2><div id="heat"></div>
     </center>
     <br>
     <br>
@@ -118,8 +118,8 @@
         }
 		var margin = { top: 100, right: 0, bottom: 100, left: 70 },
 			width = 1000 - margin.left - margin.right, 
-			height = 700 - margin.top - margin.bottom, 
-			gridSize = Math.floor(width/50), 
+			height = 1000 - margin.top - margin.bottom, 
+			gridSize = Math.ceil(width/24), 
 			legendElementWidth = Math.floor(width/15), 
             legendFactor = 50, 
 			colors = ["#ffffff","#dde8f1","#bbd1e3","#9abad6","#78a4c8","#568dba","#3f76a3","#325e82","#264662"], 
@@ -191,9 +191,9 @@
                     .enter().append("text")
                     .text(function(d) {if (d >= time_min && d <= time_max) {return d;}})
                     .attr("x",  -1 * gridSize * (workloads.length + 2))
-                    .attr("y", function(d, i) {return i * gridSize})
+                    .attr("y", function(d, i) {return i * gridSize + (gridSize/2)})
                     .style("text-anchor", "middle")
-                    .attr("dy", "0.75em")
+                    .attr("dy", "0.72em")
                     .attr("transform", "translate(" + gridSize / 2 + ", -6)")
                     .attr("transform", "rotate(-90)")
                     //.attr("class", "timeLabel mono axis axis-worktime")
@@ -208,7 +208,7 @@
 				var cards = svg.append("g").attr("id", "cards").attr("class", "g3").selectAll(".cellg")
 					.data(data, function(d) {return d.workload+ ":"+d.timestamp})
 				.enter().append("rect")
-                    .attr("x", function(d, i) {return ((d.timestamp/timestampInterval) * gridSize) - time_min / (time_max - time_min)})
+                    .attr("x", function(d, i) {return ((d.timestamp/timestampInterval) * gridSize)})
                     .attr("y", function(d, i) {return (d.workload/1000 - workload_int) * -1 * gridSize - (d.workload/1000 - workload_int)}) 
                     .attr("workload", function(d, i) {return d.workload})
                     .attr("timestamp", function(d, i) {return d.timestamp})
@@ -269,7 +269,7 @@
                       .append("text")
                       .attr("class", "label mono")
                       .attr("x", width/2)
-                      .attr("y", gridSize * (workloads.length + 5))
+                      .attr("y", gridSize * (workloads.length + 3))
                       .attr("text-anchor", "end")
                       .text("Time (" + timestampInterval +" ms)");
 
