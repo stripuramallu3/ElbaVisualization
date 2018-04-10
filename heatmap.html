@@ -95,7 +95,7 @@
     </div>
     <center>
         <div id="dataset-picker"></div>
-    	<div id="heat"></div>
+    	<h2>Point Time Response Graph</h2><div id="heat"></div>
     </center>
     <br>
     <br>
@@ -122,17 +122,20 @@
 			gridSize = Math.floor(width/50), 
 			legendElementWidth = Math.floor(width/15), 
             legendFactor = 50, 
-			colors = ["#ffffff","#dde8f1","#bbd1e3","#9abad6","#78a4c8","#568dba","#3f76a3","#325e82","#264662"]
+			colors = ["#ffffff","#dde8f1","#bbd1e3","#9abad6","#78a4c8","#568dba","#3f76a3","#325e82","#264662"], 
+            datasets = ["test.tsv", "test01.tsv"], 
+            current = "test.tsv"
 			workloads = [], 
             workload_min = Number.MAX_VALUE,
             workload_max = Number.MIN_VALUE,
             time_min = 0, 
             time_max = 391950,
             timestampInterval = 150,
+            start = time_min, 
+            end = time_max, 
             timestampList = []
             shift = 0
             first = true
-			datasets = ["test.tsv", "test01.tsv"]
             factors = [150, 15, 1, 0.1]
             factorsCount = 0
             timestampInterval *= factors[factorsCount++]
@@ -145,6 +148,7 @@
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 		var heatmapChart = function(tsvFile) {
+            current = tsvFile
             times = setTimes(time_min, time_max, timestampInterval)
 			d3.tsv(tsvFile, 
 				function(d, i) {
@@ -252,7 +256,7 @@
                 svg.append("g")
                       .attr("class", "y axis")
                       .append("text")
-                      .attr("class", "label")
+                      .attr("class", "label mono")
                       .attr("y", -70)
                       .attr("dy", ".71em")
                       .attr("text-anchor", "end")
@@ -263,7 +267,7 @@
                       .attr("class", "x axis")
                       //.attr("transform", "translate(0," + height/2 + ")")
                       .append("text")
-                      .attr("class", "label")
+                      .attr("class", "label mono")
                       .attr("x", width/2)
                       .attr("y", gridSize * (workloads.length + 5))
                       .attr("text-anchor", "end")
@@ -367,6 +371,8 @@
                         // remove selection frame
                      selectedWorkload = Number.MAX_VALUE
                      var selectedRectangles = document.getElementsByClassName("cell-selected")
+                     start = time_min
+                     end = time_max
                      for (var i = 0; i < selectedRectangles.length; i++) {
                         timestampList.push(selectedRectangles[i].__data__.timestamp)
                         selectedWorkload = Math.min(selectedWorkload, selectedRectangles[i].__data__.workload)
@@ -389,7 +395,7 @@
                          while(elements.length > 0){
                             elements[0].parentNode.removeChild(elements[0]);
                          }*/
-                         heatmapChart(datasets[0])
+                         heatmapChart(current)
                          lineChart(selectedWorkload, timestampList)
                          timestampList = []
                      }
