@@ -20,7 +20,7 @@ var margin = { top: 100, right: 0, bottom: 100, left: 70 },
     gridSize = Math.ceil(width/32), 
     legendElementWidth = Math.floor(width/15), 
     colors = ["#eef3f8","#ccdcea","#aac6dc","#89afcf","#6798c1","#4682b4","#3f76a3","#325e82","#264662"], 
-    datasets = ["test.tsv", "test01.tsv"], 
+    datasets = ["pointtime_RO.tsv", "pointtime_RW.tsv"], 
     current = "test.tsv"
     workloads = [], 
     workload_min = Number.MAX_VALUE,
@@ -280,7 +280,7 @@ var heatmapChart = function(tsvFile) {
                     elements[0].parentNode.removeChild(elements[0]);
                  }*/
                  heatmapChart(current)
-                 lines(selectedWorkload, timestampList)
+                 lines(selectedWorkload, timestampList, test_type)
                  timestampList = []
              }
              sa.selectAll("rect.selection").remove();
@@ -301,6 +301,7 @@ var heatmapChart = function(tsvFile) {
           });
     }); 
 }; 
+test_type = datasets[0].slice(10, 12)
 heatmapChart(datasets[0]);
 
 var datasetpicker = d3.select("#dataset-picker").selectAll(".dataset-button")
@@ -317,7 +318,7 @@ datasetpicker.enter()
             first = false; 
         }
         heatmapChart(d);
+        test_type = d.slice(10, 12)
         document.getElementById("cards").remove()
-        document.getElementById("linegraphs").remove()
 });
 

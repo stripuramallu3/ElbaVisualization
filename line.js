@@ -1,21 +1,22 @@
-function lines(workload, timestampList) {
-    table = '<table style="width:100%"><tr><td><div id="graph1"></div></td><td><div id="graph2"></div></td></tr><br><tr><td><div id="graph3"></div></td><td><div id="graph4"></div></td></tr></table>'
+function lines(workload, timestampList, test_type) {
+    table = '<table style="width:100%"><tr><td><div id="graph1"></div></td><td><div id="graph2"></div></td></tr><br><tr><td><div id="graph3"></div></td><td><div id="graph4"></div></td></tr><br><tr><td><div id="graph5"></div></td><td><div id="graph6"></div></td></tr></table>'
     document.getElementById("linegraphs").innerHTML = table; 
-    console.log(workload)
     workload = 1000; 
     timestamp_min = timestampList[0]
     timestamp_max = timestampList[timestampList.length - 1]
-    for (var i = 1; i <= 4; i++) {
-        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "response_time_1000.csv")
+    types = ["http", "tomcat1", "tomcat2", "tomcat3","cdjb", "mysql"]
+    for (var i = 1; i <= 6; i++) {
+        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "response_time_" + test_type + ".csv", types[i - 1])
     }
 }
 
-function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file) {
-    console.log(div_id)
+function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, type) {
     function filter(d) {
       d.timestamp = +d.date_time;
       d.value = +d.total_http;
-      /*if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload) {
+      d.type = d.type; 
+      d.workload = d.workload
+      /*if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload && d.type == type) {
         return d; 
       }*/
       return d;
@@ -50,6 +51,12 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file) {
         .x(function(d) { return x2(d.timestamp); })
         .y0(height2)
         .y1(function(d) { return y2(d.value); });
+
+    var header = d3.select(div_id).append("h1")
+        .append("text")
+          .attr("x", (width / 2))             
+          .attr("text-anchor", "middle") 
+          .text(type.toUpperCase() + " " + csv_file.split(".")[0].toUpperCase() + " - " + workload)
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width + margin.left + margin.right)
