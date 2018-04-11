@@ -318,5 +318,6 @@ datasetpicker.enter()
         }
         heatmapChart(d);
         document.getElementById("cards").remove()
+        document.getElementById("linegraphs").remove()
 });
 
