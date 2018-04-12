@@ -4,8 +4,8 @@ function lines(workload, timestampList, test_type) {
     //workload = 1000; 
     timestamp_min = timestampList[0]
     timestamp_max = timestampList[timestampList.length - 1]
-    types = ["apache", "tomcat1", "tomcat2", "tomcat3","cjdbc", "mysql"]
-    for (var i = 1; i <= 6; i++) {
+    types = ["apache", "tomcat1","cjdbc", "mysql"]
+    for (var i = 1; i <= 4; i++) {
         plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "response_time_" + test_type + ".csv", types[i - 1])
     }
 }
@@ -51,7 +51,7 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, typ
         .x(function(d) { return x2(d.timestamp); })
         .y0(height2)
         .y1(function(d) { return y2(d.value); });
-
+   
     var header = d3.select(div_id).append("h1")
         .append("text")
           .attr("x", (width / 2))             
