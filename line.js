@@ -6,7 +6,7 @@ function lines(workload, timestampList, test_type) {
     timestamp_max = timestampList[timestampList.length - 1]
     types = ["apache", "tomcat1","cjdbc", "mysql"]
     for (var i = 1; i <= 4; i++) {
-        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "response_time_" + test_type + ".csv", types[i - 1])
+        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "responsetime" + test_type + ".csv", types[i - 1])
     }
 }
 
