@@ -14,10 +14,10 @@ function setWorkload(var_min, var_max) {
 }
 
 
-var margin = { top: 100, right: 0, bottom: 100, left: 70 },
+var margin = { top: 100, right: 0, bottom: 500, left: 70 },
     width = 1000 - margin.left - margin.right, 
     height = 600 - margin.top - margin.bottom, 
-    gridSize = Math.ceil(width/32), 
+    gridSize = Math.ceil(width/24), 
     legendElementWidth = Math.floor(width/15), 
     colors = ["#eef3f8","#ccdcea","#aac6dc","#89afcf","#6798c1","#4682b4","#3f76a3","#325e82","#264662"], 
     datasets = ["pointtime_RO.tsv", "pointtime_RW.tsv"], 
@@ -34,6 +34,7 @@ var margin = { top: 100, right: 0, bottom: 100, left: 70 },
     shift = 0
     first = true
     factors = [201, 30, 3, 1, 0.1]
+    recs = [4, 3, 8, 8, 0]
     time_max += timestampInterval * factors[0]
     factorsCount = 0
     timestampInterval *= factors[factorsCount++]
@@ -162,11 +163,11 @@ var heatmapChart = function(tsvFile) {
               .attr("x", width/2)
               .attr("y", gridSize * (workloads.length + 3.5))
               .attr("text-anchor", "end")
-              .text("Time (" + timestampInterval +" ms)");
+              .text("Time (" + timestampInterval +" ms)" + "\tMax Zoom Width: " + recs[factorsCount - 1]);
         legend.enter().append("g")
           .attr("class", "legend");
         legend.append("rect")
-        .attr("x", function(d, i) { return legendElementWidth * i + (width * 0.20); })
+        .attr("x", function(d, i) { return legendElementWidth * i; })
         .attr("y", gridSize * (workloads.length + 4))
         .attr("width", legendElementWidth)
         .attr("height", gridSize / 2)
@@ -175,7 +176,7 @@ var heatmapChart = function(tsvFile) {
        legend.append("text")
         .attr("class", "mono")
         .text(function(d) { return "≥ " + Math.round(d); })
-        .attr("x", function(d, i) { return legendElementWidth * i + width * 0.20; })
+        .attr("x", function(d, i) { return legendElementWidth * i; })
         .attr("y", gridSize * (workloads.length + 4))
        legend.exit().remove();
         var sa=d3.select(".g3")
