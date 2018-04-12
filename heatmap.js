@@ -318,8 +318,11 @@ datasetpicker.enter()
         } else {
             first = false; 
         }
-        heatmapChart(d);
         test_type = d.slice(10, 12)
         document.getElementById("cards").remove()
+        d3.selectAll("#linegraphs").remove()
+        d3.selectAll(".colLabel").remove()
+        d3.selectAll(".rowLabel").remove()
+        heatmapChart(d);
 });
 
