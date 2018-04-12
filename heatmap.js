@@ -1,6 +1,6 @@
 function setTimes(var_min, var_max, step) {
     var times = []
-    for (var i = var_min; i <= var_max; i += step) {
+    for (var i = var_min; i < var_max; i += step) {
         times.push(i); 
     }
     return times
@@ -58,8 +58,8 @@ var heatmapChart = function(tsvFile) {
             } else if (w > workload_max) {
                 workload_max = w; 
             }
-            for (var i = 0; i < times.length; i++) {
-                if (times[i] == t) {
+            for (var j = 0; j < times.length; j++) {
+                if (times[j] == t) {
                     return {
                         workload: +d.workload, 
                         timestamp: +d.timestamp, 
@@ -155,7 +155,7 @@ var heatmapChart = function(tsvFile) {
               .attr("transform", "rotate(-90)")
               .text("Workload Level");
         svg.append("g")
-            .attr("id", "x-axis label")
+            .attr("id", "x-axis-label")
               .attr("class", "x axis")
               //.attr("transform", "translate(0," + height/2 + ")")
               .append("text")
@@ -271,8 +271,9 @@ var heatmapChart = function(tsvFile) {
                  if (timestampInterval == 15) {
                     timestampInterval = 50;
                  }
-                 document.getElementById("cards").remove()
-                 document.getElementById("x-axis label").remove()
+                 //document.getElementById("cards").remove()
+                 //document.getElementById("x-axis-label").remove()
+                 d3.selectAll("#x-axis-label").remove()
                  d3.selectAll(".cards").remove()
                  d3.selectAll(".colLabel").remove()
                  d3.selectAll(".rowLabel").remove()
@@ -319,10 +320,10 @@ datasetpicker.enter()
             first = false; 
         }
         test_type = d.slice(10, 12)
-        document.getElementById("cards").remove()
-        d3.selectAll("#linegraphs").remove()
         d3.selectAll(".colLabel").remove()
         d3.selectAll(".rowLabel").remove()
+        d3.selectAll("#x-axis-label").remove()
+        document.getElementById("cards").remove()
         heatmapChart(d);
 });
 
