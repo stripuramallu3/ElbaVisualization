@@ -5,12 +5,12 @@ import re
 def main():
 	mergePitData("RW")
 	mergePitData("RO")
-	mergeQLengthData("responsetime", "RO")
-	mergeQLengthData("responsetime", "RW")
-	mergeQLengthData("multiplicity", "RO")
-	mergeQLengthData("multiplicity", "RW")
-	mergeQLengthData("inout", "RO")
-	mergeQLengthData("inout", "RW")
+	# mergeQLengthData("responsetime", "RO")
+	# mergeQLengthData("responsetime", "RW")
+	# mergeQLengthData("multiplicity", "RO")
+	# mergeQLengthData("multiplicity", "RW")
+	mergeQLengthData("inout_", "RO")
+	mergeQLengthData("inout_", "RW")
 
 
 def mergePitData(config):
@@ -84,7 +84,7 @@ def mergeQLengthData(metric, config):
 		   					count = 0;
 		   					for line in datafile:
 		   						splitLine = line.split(",")
-		   						fout.write(workload + "," + serverType + "," + str(count) +"," + splitLine[1] + "\n")
+		   						fout.write(workload + "," + serverType.lower() + "," + str(count) +"," + splitLine[1] + "\n")
 		   						count = count + 50
 			os.chdir(pathToOutput)
 	os.chdir(pathToHome)
