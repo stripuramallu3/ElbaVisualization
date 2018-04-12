@@ -32,7 +32,7 @@ def mergePitData(config):
 				count = 0
 				for line in pitFile:
 					splitLine  = line.split(",");
-					fout.write(workload + "\t" + str(count) +  "\t" + splitLine[1] + "\n")
+					fout.write(workload + "\t" + str(count) +  "\t" + splitLine[1])
 					count = count + 50
 				pitFile.close()
 				os.chdir(pathToOutput)
