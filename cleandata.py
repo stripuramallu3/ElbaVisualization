@@ -32,10 +32,11 @@ for x in os.walk("."):
 		count = 0
 		for line in pitRO:
 			splitLine  = line.split(",");
-			ROout.write(workload + ", " + line)
+			ROout.write(workload + ", " + str(count) +  ", " + splitLine[1])
 			count = count + 50
 		pitRO.close()
 		os.chdir("../")
 RWout.close()
 ROout.close()
+
 
