@@ -2,12 +2,12 @@ import os
 import datetime
 import re
 
-RWfname = 'RW%s.csv' % datetime.datetime.now().strftime("_%Y-%m-%d_%H:%M:%S")
-ROfname = 'RO%s.csv' % datetime.datetime.now().strftime("_%Y-%m-%d_%H:%M:%S")
-header = "workload, timestamp, pit\n"
-RWout=open(RWfname,"a")
+RWfname = 'pointtime_RW.tsv' 
+ROfname = 'pointtime_RO.tsv' 
+header = "workload\ttimestamp\tpit\n"
+RWout=open(RWfname,"w")
 RWout.write(header)
-ROout=open(ROfname,"a")
+ROout=open(ROfname,"w")
 ROout.write(header)
 
 os.chdir("output")
@@ -20,7 +20,7 @@ for x in os.walk("."):
 		count = 0
 		for line in pitRW:
 			splitLine  = line.split(",");
-			RWout.write(workload + ", " + str(count) +  ", " + splitLine[1])
+			RWout.write(workload + "\t" + str(count) +  "\t" + splitLine[1])
 			count = count + 50
 		pitRW.close()
 		os.chdir("../")
@@ -32,7 +32,7 @@ for x in os.walk("."):
 		count = 0
 		for line in pitRO:
 			splitLine  = line.split(",");
-			ROout.write(workload + ", " + line)
+			ROout.write(workload + "\t" + str(count) +  "\t" + splitLine[1])
 			count = count + 50
 		pitRO.close()
 		os.chdir("../")

@@ -1,10 +1,10 @@
 function lines(workload, timestampList, test_type) {
-    table = '<table style="width:100%"><tr><td><div id="graph1"></div></td><td><div id="graph2"></div></td></tr><br><tr><td><div id="graph3"></div></td><td><div id="graph4"></div></td></tr><br><tr><td><div id="graph5"></div></td><td><div id="graph6"></div></td></tr></table>'
+    table = '<table style="width:100%"><tr><td><div id="graph1"></div></td><td><div id="graph2"></div></td></tr><br><tr><td><div id="graph3"></div></td><td><div id="graph4"></div></td></tr></table>'
     document.getElementById("linegraphs").innerHTML = table; 
     //workload = 1000; 
     timestamp_min = timestampList[0]
     timestamp_max = timestampList[timestampList.length - 1]
-    types = ["http", "tomcat1", "tomcat2", "tomcat3","cjdbc", "mysql"]
+    types = ["apache", "tomcat1", "tomcat2", "tomcat3","cjdbc", "mysql"]
     for (var i = 1; i <= 6; i++) {
         plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "response_time_" + test_type + ".csv", types[i - 1])
     }
