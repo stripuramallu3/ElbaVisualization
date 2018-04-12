@@ -20,7 +20,6 @@ def mergePitData(config):
 	fout = open(fname,"w")
 	fout.write(header)
 	origDir = os.getcwd()
-	print(os.getcwd())
 	os.chdir("output")
 	for x in os.walk("."):
 		if config in x[0]:
@@ -35,7 +34,6 @@ def mergePitData(config):
 				count = count + 50
 			pitFile.close()
 	os.chdir(origDir)
-	print(os.getcwd())
 	fout.close()
 
 def mergeQLengthData(metric, config):
@@ -61,7 +59,7 @@ def mergeQLengthData(metric, config):
 		   					count = 0;
 		   					for line in datafile:
 		   						splitLine = line.split(",")
-		   						fout.write(workload + "," + serverType + "," + str(count) +"," + splitLine[1] + ",")
+		   						fout.write(workload + "," + serverType + "," + str(count) +"," + splitLine[1] + "\n")
 		   						count = count + 50
 			os.chdir(pathToOutput)
 	os.chdir(pathToHome)
