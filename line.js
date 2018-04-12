@@ -4,22 +4,22 @@ function lines(workload, timestampList, test_type) {
     //workload = 1000; 
     timestamp_min = timestampList[0]
     timestamp_max = timestampList[timestampList.length - 1]
-    types = ["apache", "tomcat1","cjdbc", "mysql"]
+    types = ["apache", "tomcat","cjdbc", "mysql"]
     for (var i = 1; i <= 4; i++) {
-        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "response_time_" + test_type + ".csv", types[i - 1])
+        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "inout_" + test_type + ".csv", types[i - 1])
     }
 }
 
 function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, type) {
+    console.log(csv_file)
     function filter(d) {
       d.timestamp = +d.date_time;
       d.value = +d.total_http;
       d.type = d.type; 
       d.workload = d.workload
-      /*if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload && d.type == type) {
+      if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload && d.type == type) {
         return d; 
-      }*/
-      return d;
+      }
     }
     var margin = {top: 10, right: 10, bottom: 100, left: 40},
         margin2 = {top: 430, right: 10, bottom: 20, left: 40},

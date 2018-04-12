@@ -21,7 +21,7 @@ var margin = { top: 100, right: 0, bottom: 500, left: 70 },
     legendElementWidth = Math.floor(width/15), 
     colors = ["#eef3f8","#ccdcea","#aac6dc","#89afcf","#6798c1","#4682b4","#3f76a3","#325e82","#264662"], 
     datasets = ["pointtime_RO.tsv", "pointtime_RW.tsv"], 
-    current = "test.tsv"
+    current = "pointtime_RO.tsv"
     workloads = [], 
     workload_min = Number.MAX_VALUE,
     workload_max = Number.MIN_VALUE,
@@ -45,6 +45,7 @@ var svg = d3.select("#heat").append("svg")
             .attr("height", height + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
 var heatmapChart = function(tsvFile) {
     current = tsvFile
     times = setTimes(time_min, time_max, timestampInterval)
@@ -58,17 +59,20 @@ var heatmapChart = function(tsvFile) {
             } else if (w > workload_max) {
                 workload_max = w; 
             }
-            for (var j = 0; j < times.length; j++) {
-                if (times[j] == t) {
-                    return {
-                        workload: +d.workload, 
-                        timestamp: +d.timestamp, 
-                        value: +d.pit
-                    };
+            if (t >= time_min && t <= time_max) {
+                for (var j = 0; j < times.length; j++) {
+                    if (times[j] == t) {
+                        return {
+                            workload: +d.workload, 
+                            timestamp: +d.timestamp, 
+                            value: +d.pit
+                        };
+                    }
                 }
             }
         },
     function (error, data) {
+        console.log(workload_min)
         workloads = setWorkload(workload_min, workload_max)
         workload_int = workload_max/1000; 
         var workloadLabels = svg.selectAll(".colLabelg")
