@@ -271,10 +271,10 @@ var heatmapChart = function(tsvFile) {
                  if (timestampInterval == 15) {
                     timestampInterval = 50;
                  }
-                 //document.getElementById("cards").remove()
+                 document.getElementById("cards").remove()
                  //document.getElementById("x-axis-label").remove()
                  d3.selectAll("#x-axis-label").remove()
-                 d3.selectAll(".cards").remove()
+                 //d3.selectAll(".cards").remove()
                  d3.selectAll(".colLabel").remove()
                  d3.selectAll(".rowLabel").remove()
                  /*var elements = document.getElementsByClassName("rowLabel")
