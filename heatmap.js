@@ -4,7 +4,7 @@ function setTimes(var_min, var_max, step) {
         times.push(i); 
     }
     return times
-}
+} 
 function setWorkload(var_min, var_max) {
     var workloads = []
     for (var i = var_max; i >= var_min; i -= 1000) {
@@ -16,7 +16,7 @@ function setWorkload(var_min, var_max) {
 
 var margin = { top: 100, right: 0, bottom: 500, left: 70 },
     width = 1000 - margin.left - margin.right, 
-    height = 600 - margin.top - margin.bottom, 
+    height = 500 - margin.top - margin.bottom, 
     gridSize = Math.ceil(width/24), 
     legendElementWidth = Math.floor(width/15), 
     colors = ["#eef3f8","#ccdcea","#aac6dc","#89afcf","#6798c1","#4682b4","#3f76a3","#325e82","#264662"], 

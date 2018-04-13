@@ -6,7 +6,7 @@ function lines(workload, timestampList, test_type) {
     timestamp_max = timestampList[timestampList.length - 1]
     types = ["apache", "tomcat","cjdbc", "mysql"]
     for (var i = 1; i <= 4; i++) {
-      plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "multiplicity_" + test_type + ".csv", types[i - 1])
+      plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, /*types[i -1] + "_" + "multiplicity_" + test_type + ".csv"*/ "multiplicity_RO.csv", types[i - 1])
     }
 }
 
@@ -53,12 +53,12 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, typ
         .y0(height2)
         .y1(function(d) { return y2(d.value); });
    
-    var header = d3.select(div_id).append("h1")
+    var header = d3.select(div_id).append("h2")
         .append("text")
           .attr("x", (width / 2))             
           .attr("text-anchor", "middle") 
           //.text(type.toUpperCase() + " " + csv_file.split(".")[0].toUpperCase() + " - " + workload + " -  QueueLength" )
-          .text(type.toUpperCase() + " " + " - " + workload + " - QueueLength " + timestamp_min + " - " + timestamp_max)
+          .text(type.toUpperCase() + " " + " - " + workload + " - QueueLength " + timestamp_min + "mu - " + timestamp_max + "mu")
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width + margin.left + margin.right)
