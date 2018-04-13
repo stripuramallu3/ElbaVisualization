@@ -6,21 +6,22 @@ function lines(workload, timestampList, test_type) {
     timestamp_max = timestampList[timestampList.length - 1]
     types = ["apache", "tomcat","cjdbc", "mysql"]
     for (var i = 1; i <= 4; i++) {
-      plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "inout_" + test_type + ".csv", types[i - 1])
+      plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "multiplicity_" + test_type + ".csv", types[i - 1])
     }
 }
 
 function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, type) {
-    console.log(csv_file)
     function filter(d) {
       d.timestamp = +d.date_time;
       d.value = +d.total_http;
       d.type = d.type; 
-      d.workload = d.workload
+      d.workload = +d.workload
+      d.epoc_time = format(new Date(+d.epoc_time))
       if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload && d.type == type) {
         return d; 
       }
     }
+    var format = d3.time.format("%M-%S-%L")
     var margin = {top: 10, right: 10, bottom: 100, left: 40},
         margin2 = {top: 430, right: 10, bottom: 20, left: 40},
         width = 960 - margin.left - margin.right,
@@ -56,7 +57,8 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, typ
         .append("text")
           .attr("x", (width / 2))             
           .attr("text-anchor", "middle") 
-          .text(type.toUpperCase() + " " + csv_file.split(".")[0].toUpperCase() + " - " + workload)
+          //.text(type.toUpperCase() + " " + csv_file.split(".")[0].toUpperCase() + " - " + workload + " -  QueueLength" )
+          .text(type.toUpperCase() + " " + " - " + workload + " - QueueLength " + timestamp_min + " - " + timestamp_max)
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -87,7 +89,7 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, typ
         .call(zoom);
 
     d3.csv(csv_file, filter, function(error, data) {
-      x.domain(d3.extent(data.map(function(d) { return d.timestamp; })));
+      x.domain(d3.extent(data.map(function(d) { return d.date_time; })));
       y.domain([0, d3.max(data.map(function(d) { return d.value; }))]);
       x2.domain(x.domain());
       y2.domain(y.domain());
