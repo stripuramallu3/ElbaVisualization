@@ -1,3 +1,4 @@
+lines(10000, [0,391950], test_type)
 function lines(workload, timestampList, test_type) {
     table = '<table style="width:100%"><tr><td><div id="graph1"></div></td><td><div id="graph2"></div></td></tr><br><tr><td><div id="graph3"></div></td><td><div id="graph4"></div></td></tr></table>'
     document.getElementById("linegraphs").innerHTML = table; 
@@ -9,7 +10,6 @@ function lines(workload, timestampList, test_type) {
       plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, /*types[i -1] + "_" + "multiplicity_" + test_type + ".csv"*/ "multiplicity_RO.csv", types[i - 1])
     }
 }
-
 function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, type) {
     function filter(d) {
       d.timestamp = +d.date_time;
