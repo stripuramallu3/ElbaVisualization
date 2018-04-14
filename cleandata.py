@@ -7,10 +7,17 @@ def main():
 	mergePitData("RO")
 	# mergeQLengthData("responsetime", "RO")
 	# mergeQLengthData("responsetime", "RW")
+<<<<<<< HEAD
 	# mergeQLengthData("multiplicity", "RO")
 	# mergeQLengthData("multiplicity", "RW")
 	mergeQLengthData("inout", "RO")
 	mergeQLengthData("inout", "RW")
+=======
+	mergeQLengthData("multiplicity_", "RO")
+	mergeQLengthData("multiplicity_", "RW")
+	mergeQLengthData("inout_", "RO")
+	mergeQLengthData("inout_", "RW")
+>>>>>>> fd1355f7638056bbb693cdf0cdd2680f3099c6be
 
 
 def mergePitData(config):
@@ -41,7 +48,7 @@ def mergePitData(config):
 
 def mergeQLengthData(metric, config):
 	fname = metric + config + '.csv'
-	header = "workload,type,date_time,total_http\n"
+	header = "workload,type,date_time,epoc_time,total_http\n"
 	fout = open(fname,"w")
 	fout.write(header)
 	pathToHome = os.getcwd()
@@ -62,7 +69,7 @@ def mergeQLengthData(metric, config):
 		   					count = 0;
 		   					for line in datafile:
 		   						splitLine = line.split(",")
-		   						fout.write(workload + "," + serverType + "," + str(count) +"," + splitLine[1] + "\n")
+		   						fout.write(workload + "," + serverType.lower() + "," + str(count) +"," + splitLine[0] + ","+ splitLine[len(splitLine) - 1])
 		   						count = count + 50
 			os.chdir(pathToOutput)
 	os.chdir(pathToHome)

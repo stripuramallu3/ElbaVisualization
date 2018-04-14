@@ -1,26 +1,27 @@
+lines(10000, [0,391950], test_type)
 function lines(workload, timestampList, test_type) {
     table = '<table style="width:100%"><tr><td><div id="graph1"></div></td><td><div id="graph2"></div></td></tr><br><tr><td><div id="graph3"></div></td><td><div id="graph4"></div></td></tr></table>'
     document.getElementById("linegraphs").innerHTML = table; 
     //workload = 1000; 
     timestamp_min = timestampList[0]
     timestamp_max = timestampList[timestampList.length - 1]
-    types = ["apache", "tomcat1","cjdbc", "mysql"]
+    types = ["apache", "tomcat","cjdbc", "mysql"]
     for (var i = 1; i <= 4; i++) {
-        plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, "responsetime" + test_type + ".csv", types[i - 1])
+      plotGraph("#graph" + i, workload, timestamp_min, timestamp_max, /*types[i -1] + "_" + "multiplicity_" + test_type + ".csv"*/ "multiplicity_RO.csv", types[i - 1])
     }
 }
-
 function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, type) {
     function filter(d) {
       d.timestamp = +d.date_time;
       d.value = +d.total_http;
       d.type = d.type; 
-      d.workload = d.workload
-      /*if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload && d.type == type) {
+      d.workload = +d.workload
+      d.epoc_time = format(new Date(+d.epoc_time))
+      if (d.timestamp >= timestamp_min && d.timestamp <= timestamp_max && d.workload == workload && d.type == type) {
         return d; 
-      }*/
-      return d;
+      }
     }
+    var format = d3.time.format("%M-%S-%L")
     var margin = {top: 10, right: 10, bottom: 100, left: 40},
         margin2 = {top: 430, right: 10, bottom: 20, left: 40},
         width = 960 - margin.left - margin.right,
@@ -52,11 +53,12 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, typ
         .y0(height2)
         .y1(function(d) { return y2(d.value); });
    
-    var header = d3.select(div_id).append("h1")
+    var header = d3.select(div_id).append("h2")
         .append("text")
           .attr("x", (width / 2))             
           .attr("text-anchor", "middle") 
-          .text(type.toUpperCase() + " " + csv_file.split(".")[0].toUpperCase() + " - " + workload)
+          //.text(type.toUpperCase() + " " + csv_file.split(".")[0].toUpperCase() + " - " + workload + " -  QueueLength" )
+          .text(type.toUpperCase() + " " + " - " + workload + " - QueueLength " + timestamp_min + "mu - " + timestamp_max + "mu")
 
     var svg = d3.select(div_id).append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -87,7 +89,7 @@ function plotGraph(div_id, workload, timestamp_min, timestamp_max, csv_file, typ
         .call(zoom);
 
     d3.csv(csv_file, filter, function(error, data) {
-      x.domain(d3.extent(data.map(function(d) { return d.timestamp; })));
+      x.domain(d3.extent(data.map(function(d) { return d.date_time; })));
       y.domain([0, d3.max(data.map(function(d) { return d.value; }))]);
       x2.domain(x.domain());
       y2.domain(y.domain());
